@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+<Resource name="jdbc/QuizGameDB" auth="Container"
+type="javax.sql.DataSource"
+maxTotal="100" maxIdle="30" maxWaitMillis="10000"
+username="e2001010" password="JEYRyrxSnmy"
+driverClassName="com.mysql.cj.jdbc.Driver"
+url="jdbc:mysql://mariadb.vamk.fi:3306/e2001010_QuizGame?serverTimezone=Europe/Helsinki" />
+</Context>
