@@ -10,16 +10,30 @@
 </head>
 <body>
   <h1>Quiz time!</h1>
+      ${questionForClient.question}
      <form action="QuestionServlet" method="get">
         Choose:<br>
         <select name="choice">
             <option></option> <!-- ensimmäisenä tyhjä vaihtoehto -->
-            <c:forEach var="q" items="${questions}">
-                <option>${q.question }</option> 
+            <c:forEach var="a" items="${possibleAnswers}">
+                <option>${a.answer }</option> 
             </c:forEach>
         </select>
         <input type="submit" value="Submit">
     </form>
+    
+    <form action="QuestionServlet" method="get">    
+      <input type="submit" value="Generate">
+    </form>
+   
+    
+    <c:if test="${not empty Answer && Answer == true}">
+      That is correct!
+    </c:if>
+    
+    <c:if test="${not empty Answer && Answer == false}">
+      Not correct.
+    </c:if>
 
 </body>
 </html>
