@@ -1,2 +1,2 @@
 # Quiz_Game
-Quiz game project using java
+Server programming project using java
