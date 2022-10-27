@@ -7,6 +7,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import repository.AnswerDAO;
 import repository.AnswerService;
 import repository.QuestionDAO;
 import model.Answer;
@@ -39,26 +40,29 @@ public class QuestionServlet extends HttpServlet {
 
 	  try {
 	    QuestionDAO questionDao = new QuestionDAO(ds);
+	    AnswerDAO answerDao = new AnswerDAO(ds);
 	    List<Question> questions = questionDao.getQuestions();
+	    List<Answer> realAnswers = answerDao.getAnswers();
 	    Question questionToAsk = questions.get(randInt);
+	    Answer answerToQuestion = realAnswers.get(randInt);
 	    request.setAttribute("questionForClient", questionToAsk);
-		  
-	    if(questionToAsk.getQuestion().contains("What is the capital of Finland?")) {
-	  	  List<Answer> answers = answerService.getAnswers(1);
+	    System.out.println(answerToQuestion.getAnswerId() + answerToQuestion.getAnswer());
+	    int answersToGet = answerToQuestion.getAnswerId();
+		
+	    if(questionToAsk.getQuestionid() == 1) {
+	  	  List<Answer> answers = answerService.getAnswers(answersToGet);
 		  request.setAttribute("possibleAnswers", answers);
 	    } else {
-	      List<Answer> answers = answerService.getAnswers(2);
+	      List<Answer> answers = answerService.getAnswers(answersToGet);
 	      request.setAttribute("possibleAnswers", answers);	
 	    	
 	    }
 	    
 	    String choice = request.getParameter("choice");
 	    if(choice != null && choice.trim().length() > 0) {
-	      if(choice.equals("Helsinki")) {
+	      if(choice.equals(answerToQuestion.getAnswer())) {
 	        request.setAttribute("Answer", true);  	  
-	      }	else if (choice.equals("Yes")) {
-	    	request.setAttribute("Answer", true);  
-	      } else {
+	      }	else {
 	    	request.setAttribute("Answer", false);  
 	      }
 	    }
