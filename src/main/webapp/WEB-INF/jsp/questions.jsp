@@ -10,16 +10,16 @@
 </head>
 <body>
   <h1>Quiz time!</h1>
-      ${questionForClient.question}
-     <form action="QuestionServlet" method="get">
-        Choose:<br>
-        <select name="choice">
-            <option></option> <!-- ensimmäisenä tyhjä vaihtoehto -->
-            <c:forEach var="a" items="${possibleAnswers}">
-                <option>${a.answer }</option> 
-            </c:forEach>
-        </select>
-        <input type="submit" value="Submit">
+    ${questionForClient.question}
+    <form action="QuestionServlet" method="get">
+      Choose:<br>
+      <select name="choice">
+        <option></option> <!-- ensimmäisenä tyhjä vaihtoehto -->
+        <c:forEach var="a" items="${possibleAnswers}">
+          <option>${a.answer }</option> 
+        </c:forEach>
+      </select>
+      <input type="submit" value="Submit">
     </form>
     
     <form action="QuestionServlet" method="get">    
