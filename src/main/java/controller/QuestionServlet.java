@@ -9,9 +9,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import repository.AnswerDAO;
 import repository.AnswerService;
+import repository.FalseAnswerDAO;
 import repository.QuestionDAO;
 import model.Answer;
 import model.Question;
+import model.FalseAnswer;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -39,16 +41,23 @@ public class QuestionServlet extends HttpServlet {
 	  try {
 	    QuestionDAO questionDao = new QuestionDAO(ds);
 	    AnswerDAO answerDao = new AnswerDAO(ds);
+	    FalseAnswerDAO falseAnswerDao = new FalseAnswerDAO(ds);
 	    List<Question> questions = questionDao.getQuestions();
 	    List<Answer> realAnswers = answerDao.getAnswers();
+	    List<FalseAnswer> falseAnswers = falseAnswerDao.getFalseAnswers();
 	    List<String> answerList = new ArrayList<>();
+	    
+	    //NOTE: Got all the falseAnswers here successfully!
+	    for(FalseAnswer fa: falseAnswers) {
+	      System.out.println(fa);	
+	    }
 	    
 	    //For randomizing questions and getting the answer to the question
 		Random rand = new Random();
 		int randInt = rand.nextInt(questions.size());
 	    Question questionToAsk = questions.get(randInt);
 	    Answer answerToQuestion = realAnswers.get(randInt);
-	    
+	    	    
 	    request.setAttribute("questionForClient", questionToAsk);
 	    
 	    //Add the correct answers without id to a String list

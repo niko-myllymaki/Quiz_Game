@@ -8,14 +8,16 @@ public class Answer implements Serializable{
   
   private int answerId;
   private String answer;
+  private int questionId;
   
   public Answer() {
 	  
   }
   
-  public Answer(int answerId, String answer) {
+  public Answer(int answerId, String answer, int questionId) {
     this.answerId = answerId;
     this.answer = answer;
+    this.questionId = questionId;
   }
 
   public int getAnswerId() {
@@ -34,7 +36,13 @@ public class Answer implements Serializable{
 	this.answer = answer;
   }
 
-	
+  public int getQuestionId() {
+    return questionId;
+  }
+
+  public void setQuestionId(int questionId) {
+    this.questionId = questionId;
+  }
 
 
 }

@@ -9,32 +9,28 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-import model.Answer;
+import model.FalseAnswer;
 
-public class AnswerDAO {
+public class FalseAnswerDAO {
 
   private DataSource ds;
   
-  public AnswerDAO(DataSource ds) throws SQLException {
+  public FalseAnswerDAO(DataSource ds) throws SQLException {
     this.ds = ds;
   }
   
-  public List<Answer> getAnswers() throws SQLException {
-    List<Answer> answers = new ArrayList<>();
-    String sql = "SELECT answerid, answer, questionid FROM answer";
+  public List<FalseAnswer> getFalseAnswers() throws SQLException {
+    List<FalseAnswer> falseAnswers = new ArrayList<>();
+    String sql = "SELECT falseAnswerid, falseAnswer, questionid FROM falseAnswer";
     try(Connection conn = ds.getConnection()) {
       try(PreparedStatement pstm = conn.prepareStatement(sql)) {
         ResultSet rs = pstm.executeQuery();
         while(rs.next()) {
-          Answer m = new Answer(rs.getInt(1), rs.getString(2), rs.getInt(3));
-          answers.add(m);
+          FalseAnswer m = new FalseAnswer(rs.getInt(1), rs.getString(2), rs.getInt(3));
+          falseAnswers.add(m);
         }
       }	
     }
-	return answers;
-    
+	return falseAnswers;
   }
-	
-	
-
 }

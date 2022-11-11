@@ -16,28 +16,28 @@ public class AnswerService {
 
   public AnswerService() {
     answersToQ1 = new ArrayList<>();
-	answersToQ1.add(new Answer(1, "Berlin"));
-    answersToQ1.add(new Answer(2, "Helsinki"));
-	answersToQ1.add(new Answer(3, "Turku"));
-	answersToQ1.add(new Answer(4, "Stockholm"));
+	answersToQ1.add(new Answer(1, "Berlin", 1));
+    answersToQ1.add(new Answer(2, "Helsinki", 1));
+	answersToQ1.add(new Answer(3, "Turku", 1));
+	answersToQ1.add(new Answer(4, "Stockholm", 1));
    
     answersToQ2 = new ArrayList<>();
-    answersToQ2.add(new Answer(5, "No"));
-    answersToQ2.add(new Answer(6, "Yes"));
-    answersToQ2.add(new Answer(7, "Maybe"));
-    answersToQ2.add(new Answer(8, "We'll see"));
+    answersToQ2.add(new Answer(5, "No", 2));
+    answersToQ2.add(new Answer(6, "Yes", 2));
+    answersToQ2.add(new Answer(7, "Maybe", 2));
+    answersToQ2.add(new Answer(8, "We'll see", 2));
     
     answersToQ3 = new ArrayList<>();
-    answersToQ3.add(new Answer(9, "Blue"));
-    answersToQ3.add(new Answer(10, "Red"));
-    answersToQ3.add(new Answer(11, "Pink"));
-    answersToQ3.add(new Answer(12, "Yellow"));
+    answersToQ3.add(new Answer(9, "Blue", 3));
+    answersToQ3.add(new Answer(10, "Red", 3));
+    answersToQ3.add(new Answer(11, "Pink", 3));
+    answersToQ3.add(new Answer(12, "Yellow", 3));
     
     answersToQ4 = new ArrayList<>();
-    answersToQ4.add(new Answer(13, "Vaasa"));
-    answersToQ4.add(new Answer(14, "No idea"));
-    answersToQ4.add(new Answer(15, "Gerby"));
-    answersToQ4.add(new Answer(16, "Palosaari"));
+    answersToQ4.add(new Answer(13, "Vaasa", 4));
+    answersToQ4.add(new Answer(14, "No idea", 4));
+    answersToQ4.add(new Answer(15, "Gerby", 4));
+    answersToQ4.add(new Answer(16, "Palosaari", 4));
     
     
   }
