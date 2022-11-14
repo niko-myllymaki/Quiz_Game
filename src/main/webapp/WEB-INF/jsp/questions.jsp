@@ -16,7 +16,7 @@
       <select name="choice">
         <option></option> <!-- ensimmäisenä tyhjä vaihtoehto -->
         <c:forEach var="a" items="${possibleAnswers}">
-          <option>${a.answer }</option> 
+          <option>${a}</option> 
         </c:forEach>
       </select>
       <input type="submit" value="Submit">

@@ -8,7 +8,6 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import repository.AnswerDAO;
-import repository.AnswerService;
 import repository.FalseAnswerDAO;
 import repository.QuestionDAO;
 import model.Answer;
@@ -18,6 +17,8 @@ import model.FalseAnswer;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -30,11 +31,9 @@ public class QuestionServlet extends HttpServlet {
 	@Resource(name="jdbc/QuizGameDB")
 	private DataSource ds;
 	
-	private AnswerService answerService;
 	
     public QuestionServlet() {
         super();
-        answerService = new AnswerService();	
     }
     
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -45,37 +44,58 @@ public class QuestionServlet extends HttpServlet {
 	    List<Question> questions = questionDao.getQuestions();
 	    List<Answer> realAnswers = answerDao.getAnswers();
 	    List<FalseAnswer> falseAnswers = falseAnswerDao.getFalseAnswers();
-	    List<String> answerList = new ArrayList<>();
-	    
-	    //NOTE: Got all the falseAnswers here successfully!
-	    for(FalseAnswer fa: falseAnswers) {
-	      System.out.println(fa);	
-	    }
-	    
-	    //For randomizing questions and getting the answer to the question
+	    List<String> correctAnswerList = new ArrayList<>();
+	    List<String> combinedAnswerList = new ArrayList<>();
+
+	    //Randomizing questions
 		Random rand = new Random();
 		int randInt = rand.nextInt(questions.size());
-	    Question questionToAsk = questions.get(randInt);
-	    Answer answerToQuestion = realAnswers.get(randInt);
-	    	    
+	    Question questionToAsk = questions.get(randInt);	    	    
 	    request.setAttribute("questionForClient", questionToAsk);
 	    
-	    //Add the correct answers without id to a String list
-	    Answer answer = null;
-	    for(int i = 0; i < questions.size(); i++) {
-	      answer = realAnswers.get(i);
-	      answerList.add(answer.getAnswer());
+	    //Add the correct answers to a list
+	    String answer = null;
+	    for(Answer ans: realAnswers) {
+	      answer = ans.getAnswer();	
+	      correctAnswerList.add(answer);	
 	    }
 	    
 	    //Provide possible answers for questions.jsp for the user
-	    int answersToGet = answerToQuestion.getAnswerId();
-	    List<Answer> answers = answerService.getAnswers(answersToGet);
-		request.setAttribute("possibleAnswers", answers);
+	    int answersToGet = questionToAsk.getQuestionid();
+	    
+	    for(Answer a: realAnswers) {	
+	      if(a.getQuestionId() == answersToGet) {
+	        combinedAnswerList.add(a.getAnswer());	  
+	      }	
+	    }
+	    	
+	    for(FalseAnswer fa: falseAnswers) {
+	      if(fa.getQuestionId() == answersToGet) {
+	        combinedAnswerList.add(fa.getFalseAnswer());
+	      }
+		}
+	    
+	    //Convert arraylist to array
+	    Object[] answersArr = combinedAnswerList.toArray();
+	    
+	    //Shuffle the possible answers
+	    int sizeOfArr = answersArr.length;
+	    for (int i = sizeOfArr-1; i > 0; i--) {
+	      // Pick a random index from 0 to i	
+	      int j = rand.nextInt(i);
+	     
+	      // Swap answersArr[i] with the element at random index
+	      String temp = (String) answersArr[i];
+	      answersArr[i] = answersArr[j];
+	      answersArr[j] = temp;	
+	    }
+	    	    
+		request.setAttribute("possibleAnswers", answersArr);
 		  
 	    //Check if the list contains user's choice and send a response to questions.jsp
 	    String choice = request.getParameter("choice");
 	    if(choice != null && choice.trim().length() > 0) {
-	      if(answerList.contains(choice)) {
+	      if(correctAnswerList.contains(choice)) {
 	        request.setAttribute("Answer", true);  	 
 	      }	else {
 	    	request.setAttribute("Answer", false);  
