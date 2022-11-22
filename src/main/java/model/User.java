@@ -9,15 +9,17 @@ public class User implements Serializable {
   private int userid;
   private String username; 
   private String password;
+  private int points;
   
   public User() {
 	  
   }
   
-  public User(int userid, String username, String password) {
+  public User(int userid, String username, String password, int points) {
     this.userid = userid;
     this.username = username;
     this.password = password;
+    this.points = points;
   }
 
   public int getUserid() {
@@ -44,7 +46,14 @@ public class User implements Serializable {
 	this.password = password;
   }
   
-  
+  public int getPoints() {
+    return points;
+  }
+
+  public void setPoints(int points) {
+    this.points = points;
+  }
+	  
 	
 	  
 	

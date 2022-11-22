@@ -20,7 +20,7 @@
  <form action="LoginPageServlet" method="get">
    Username: <input type="text" class="form-control" id="username" name="username" value="${param.username}">
    <br>
-   Password: <input type="text" class="form-control" id="password" name="password" value="${param.password}">
+   Password: <input type="password" class="form-control" id="password" name="password" value="${param.password}">
    <button type="submit" class="btn btn-default">Submit</button>
  </form>
   

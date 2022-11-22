@@ -10,6 +10,7 @@
 </head>
 <body>
   <h1>Quiz time!</h1>
+    <b>Logged in as:</b> ${LoggedUser}<br><br>
     ${questionForClient.question}
     <form action="QuestionServlet" method="get">
       Choose:<br>

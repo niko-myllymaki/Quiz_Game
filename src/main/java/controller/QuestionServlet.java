@@ -7,9 +7,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import repository.AnswerDAO;
 import repository.FalseAnswerDAO;
 import repository.QuestionDAO;
+import repository.UserDAO;
 import model.Answer;
 import model.Question;
 import model.FalseAnswer;
@@ -17,8 +19,6 @@ import model.FalseAnswer;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
@@ -41,11 +41,17 @@ public class QuestionServlet extends HttpServlet {
 	    QuestionDAO questionDao = new QuestionDAO(ds);
 	    AnswerDAO answerDao = new AnswerDAO(ds);
 	    FalseAnswerDAO falseAnswerDao = new FalseAnswerDAO(ds);
+	    UserDAO userDao = new UserDAO(ds);
 	    List<Question> questions = questionDao.getQuestions();
 	    List<Answer> realAnswers = answerDao.getAnswers();
 	    List<FalseAnswer> falseAnswers = falseAnswerDao.getFalseAnswers();
 	    List<String> correctAnswerList = new ArrayList<>();
 	    List<String> combinedAnswerList = new ArrayList<>();
+        HttpSession session = request.getSession();
+        
+        //Get username from LoginPageServlet
+	    String loggedUser= (String) session.getAttribute("userName");
+	    request.setAttribute("LoggedUser", loggedUser);
 
 	    //Randomizing questions
 		Random rand = new Random();
@@ -93,13 +99,16 @@ public class QuestionServlet extends HttpServlet {
 		request.setAttribute("possibleAnswers", answersArr);
 		  
 	    //Check if the list contains user's choice and send a response to questions.jsp
-	    String choice = request.getParameter("choice");
+		int loggedUserId = (int) session.getAttribute("userId");
+		String choice = request.getParameter("choice");
 	    if(choice != null && choice.trim().length() > 0) {
 	      if(correctAnswerList.contains(choice)) {
-	        request.setAttribute("Answer", true);  	 
+		    userDao.updatePoints(loggedUserId);
+	        request.setAttribute("Answer", true);  
 	      }	else {
 	    	request.setAttribute("Answer", false);  
 	      }
+	      
 	    }
 	  } catch(SQLException e) {
 		  request.setAttribute("error", "Problems occured. Try again later.");

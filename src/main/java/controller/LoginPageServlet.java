@@ -7,11 +7,13 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import model.User;
 import repository.UserDAO;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -27,37 +29,56 @@ public class LoginPageServlet extends HttpServlet {
         super();
     }
 
-	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-       
 	  try {
 		UserDAO userdao = new UserDAO(ds);
 		String username = request.getParameter("username");	
 		String password = request.getParameter("password");	
-		
+		List<String> usernames = new ArrayList<>();
+		List<String> passwords = new ArrayList<>();
+        HttpSession session = request.getSession();
+        
 		List<User> users = userdao.getUsers();
+		for(User u: users) {
+		  usernames.add(u.getUsername());
+		  passwords.add(u.getPassword());
+		  
+		}
+		
+		
+		
 		
 		if(username == "" || password == "") {
 	      request.setAttribute("error", "Please fill all the required fields.");	  
+	    } else if(usernames.contains(username) && passwords.contains(password) ) {
+	      //Now we can use this in QuestionServlet or any other servlet		
+	      int userId = userdao.getUserId(username, password);
+		  System.out.println("user id is: " + userId);
+	      session.setAttribute("userName", username);	
+	      session.setAttribute("userId", userId); //TODO: How to add points to existing users. When creating a new user it works fine
+	     
+	      response.sendRedirect("QuestionServlet");  
+	      return;
 	    } else {
-	      User auser = new User(0, username, password);
-	      userdao.insertUser(auser);
+	      User auser = new User(0, username, password, 0);
+	      int userId = userdao.insertUser(auser);
+	      session.setAttribute("userName", username);
+	      session.setAttribute("userId", userId);
 	      response.sendRedirect("QuestionServlet");  
 	      return;
 		}
 		
 	  } catch (SQLException e) {
-        request.setAttribute("error", "Problems. Try again later.");
-		e.printStackTrace();
+          request.setAttribute("error", "Problems. Try again later.");
+		  e.printStackTrace();
 	  }	
 	
 	  RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
 	  rd.forward(request, response);
 	}
 
-	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		doGet(request, response);
+      doGet(request, response);
 	}
 
 }
