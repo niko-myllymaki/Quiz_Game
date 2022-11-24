@@ -42,21 +42,15 @@ public class LoginPageServlet extends HttpServlet {
 		for(User u: users) {
 		  usernames.add(u.getUsername());
 		  passwords.add(u.getPassword());
-		  
 		}
-		
-		
-		
 		
 		if(username == "" || password == "") {
 	      request.setAttribute("error", "Please fill all the required fields.");	  
 	    } else if(usernames.contains(username) && passwords.contains(password) ) {
 	      //Now we can use this in QuestionServlet or any other servlet		
 	      int userId = userdao.getUserId(username, password);
-		  System.out.println("user id is: " + userId);
 	      session.setAttribute("userName", username);	
-	      session.setAttribute("userId", userId); //TODO: How to add points to existing users. When creating a new user it works fine
-	     
+	      session.setAttribute("userId", userId); 
 	      response.sendRedirect("QuestionServlet");  
 	      return;
 	    } else {

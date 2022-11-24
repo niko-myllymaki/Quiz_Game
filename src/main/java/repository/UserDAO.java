@@ -54,11 +54,27 @@ public class UserDAO {
 	return userid;  
   }
   
-  public void updatePoints(int userid) throws SQLException {
+  public int getUserPoints(int userId) throws SQLException {
+    String sql = "SELECT points FROM user WHERE userid=?";
+    int points = 0;
+    try (Connection conn = ds.getConnection()) {
+      try(PreparedStatement pstm = conn.prepareStatement(sql)) {
+        pstm.setInt(1, userId);	  
+        ResultSet rs = pstm.executeQuery();
+        while (rs.next()) {
+        	points = rs.getInt("points");	
+        }
+      }       
+    }
+    return points;	  
+  }
+  
+  public void updateUserPoints(int userid, int points) throws SQLException {
     String sql = "UPDATE user SET points=? WHERE userid=?";
+    int newPoints = points +1;
     try (Connection conn = ds.getConnection()) {
       try (PreparedStatement pstm = conn.prepareStatement(sql)) {
-    	pstm.setInt(1, 1);  
+    	pstm.setInt(1, newPoints);  
     	pstm.setInt(2, userid);  
         pstm.executeUpdate();
       }	

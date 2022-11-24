@@ -49,9 +49,9 @@ public class QuestionServlet extends HttpServlet {
 	    List<String> combinedAnswerList = new ArrayList<>();
         HttpSession session = request.getSession();
         
-        //Get username from LoginPageServlet
-	    String loggedUser= (String) session.getAttribute("userName");
-	    request.setAttribute("LoggedUser", loggedUser);
+        //Get username from LoginPageServlet and show it in questions.jsp
+	    String loggedUsername= (String) session.getAttribute("userName");
+	    request.setAttribute("LoggedUsername", loggedUsername);
 
 	    //Randomizing questions
 		Random rand = new Random();
@@ -99,12 +99,15 @@ public class QuestionServlet extends HttpServlet {
 		request.setAttribute("possibleAnswers", answersArr);
 		  
 	    //Check if the list contains user's choice and send a response to questions.jsp
+		//Update user's points if necessary
 		int loggedUserId = (int) session.getAttribute("userId");
+		int loggedUserPoints = userDao.getUserPoints(loggedUserId);
+	    request.setAttribute("loggedUserPoints", loggedUserPoints);
 		String choice = request.getParameter("choice");
 	    if(choice != null && choice.trim().length() > 0) {
 	      if(correctAnswerList.contains(choice)) {
-		    userDao.updatePoints(loggedUserId);
 	        request.setAttribute("Answer", true);  
+		    userDao.updateUserPoints(loggedUserId, loggedUserPoints);
 	      }	else {
 	    	request.setAttribute("Answer", false);  
 	      }
