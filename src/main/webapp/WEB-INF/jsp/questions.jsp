@@ -10,10 +10,11 @@
 </head>
 <body>
   <h1>Quiz time!</h1>
-    <b>Logged in as:</b> ${LoggedUsername}<br>
+    <b>Logged in as:</b> ${loggedUsername}<br>
     <b>Current Points:</b> ${loggedUserPoints}<br><br>
     ${questionForClient.question}
-    <form action="QuestionServlet" method="get">
+    
+    <form action="QuestionServlet" method="post">
       Choose:<br>
       <select name="choice">
         <option></option> <!-- ensimmäisenä tyhjä vaihtoehto -->
@@ -28,7 +29,6 @@
       <input type="submit" value="Generate">
     </form>
    
-    
     <c:if test="${not empty Answer && Answer == true}">
       That is correct!
     </c:if>

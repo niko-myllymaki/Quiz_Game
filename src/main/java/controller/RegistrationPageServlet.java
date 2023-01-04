@@ -18,69 +18,69 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-@WebServlet ("/LoginPageServlet/")
-public class LoginPageServlet extends HttpServlet {
+@WebServlet ("/Registration/")
+public class RegistrationPageServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
 	@Resource(name="jdbc/QuizGameDB")
 	private DataSource ds;
-  
-    public LoginPageServlet() {
+	
+    public RegistrationPageServlet() {
         super();
     }
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	
-	  RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+	 
+	  RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/registration.jsp");
 	  rd.forward(request, response);
 	}
 
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	  UserDAO userdao = null;
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	  UserDAO userDao = null;  
 	  String username = request.getParameter("username");	
 	  String password = request.getParameter("password");	
-	  List<User> users = null;
-	  List<String> usernames = new ArrayList<>();
-	  List<String> passwords = new ArrayList<>();
       HttpSession session = request.getSession();
-	  
+      
+	  List<User> users = null;
+      List<String> usernames = new ArrayList<>();
+	  List<String> passwords = new ArrayList<>();
+      
 	  try {
-		userdao = new UserDAO(ds);
+        userDao = new UserDAO(ds);
 	  } catch (SQLException e) {
 		e.printStackTrace();
-	  }
-	
+	  } 
+	  
 	  try {
-		users = userdao.getUsers();
+		users = userDao.getUsers();
 	  } catch (SQLException e) {
 		e.printStackTrace();
 	  }
 	  
 	  for(User u: users) {
 	    usernames.add(u.getUsername());
-		passwords.add(u.getPassword());
+	    passwords.add(u.getPassword());
 	  }
-		
+	  
 	  if(username == "" || password == "") {
 	    request.setAttribute("error", "Please fill all the required fields.");	  
-	  } else if(usernames.contains(username) && passwords.contains(password) ) {
-	      //Now we can use this in QuestionServlet or any other servlet		
-	      int userId = 0;
-		  try {
-			userId = userdao.getUserId(username, password);
-		  } catch (SQLException e) {
-			e.printStackTrace();
-		  }
-	      session.setAttribute("userName", username);	
-	      session.setAttribute("userId", userId); 
-	      response.sendRedirect("QuestionServlet");  
-	      return;
-	    } else {
-		  request.setAttribute("error", "You need to register in first to start playing.");	 
+	  } else if (usernames.contains(username)) {
+		request.setAttribute("error", "That user already exists."); 
+	  } else {
+		User auser = new User(0, username, password, 0);
+		try {
+		  int userId = userDao.insertUser(auser);
+		  session.setAttribute("userName", username);
+		  session.setAttribute("userId", userId);
+		} catch (SQLException e) {
+		  e.printStackTrace();
 		}
 		
-	  RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/login.jsp");
+	    response.sendRedirect("QuestionServlet"); 
+	    return;
+	  }
+	  
+	  RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/registration.jsp");
 	  rd.forward(request, response);
 	}
-
 }

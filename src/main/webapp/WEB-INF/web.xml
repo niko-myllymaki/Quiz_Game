@@ -39,4 +39,14 @@
     <servlet-name>LoginPageServlet</servlet-name>
     <url-pattern>/LoginPageServlet</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>RegistrationPageServlet</display-name>
+    <servlet-name>RegistrationPageServlet</servlet-name>
+    <servlet-class>controller.RegistrationPageServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>RegistrationPageServlet</servlet-name>
+    <url-pattern>/RegistrationPageServlet</url-pattern>
+  </servlet-mapping>
 </web-app>
